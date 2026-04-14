@@ -81,7 +81,9 @@ Es un error bastante molesto porque no falla al compilar ni al arrancar. Solo te
 
 ## Q8 — Missing 201
 
-Un `@Post()` sin `@HttpCode()` devuelve 200, no 201. Técnicamente el recurso se crea igual, pero puede romper tests que esperan 201, SDKs que usan el status code para saber si se creó algo, o el contrato de una spec de OpenAPI/Swagger que diga 201.
+En NestJS, `@Post()` ya devuelve 201 por defecto — es la única excepción al default de 200 que aplica para todos los demás métodos HTTP. Entonces no tener `@HttpCode(HttpStatus.CREATED)` no es funcionalmente incorrecto, el cliente recibiría 201 igual. Ponerlo es redundante pero tampoco está mal, deja la intención explícita.
+
+Donde sí importa `@HttpCode()` es cuando quieres un código *distinto* al default — por ejemplo un POST que responda 200, 202 o 204. Sin el decorador, Nest siempre va a poner 201. También importa si usas `@Res()` para manejar la respuesta manualmente, porque ahí el default automático de Nest deja de aplicar.
 
 ## Q9 — Service throws, not returns null
 
